@@ -123,10 +123,10 @@
 <stringAttribute key="com.pemicro.mcu.debug.connections.pne.eppc.names_of_user_added_attributes" value=""/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="com.freescale.cdt.debug.cw.eppc.EPPCDebugger"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="RAM/testcar-ss.elf"/>
-<stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="test-car--ss"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="dasauto"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.freescale.ppc.debug.toolchain.configuration.1777678983"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/test-car--ss"/>
+<listEntry value="/dasauto"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="4"/>

@@ -83,6 +83,8 @@ void set_speed_pwm(int16_t speed_pwm)	//speed_pwm正为向前，负为向后
 {
 	if (speed_pwm>0)	//forward
 	{
+		StopL = 0;
+		RunL = 1;
 		if (speed_pwm>SPEED_PWM_MAX)
 		{
 			speed_pwm = SPEED_PWM_MAX;
@@ -93,6 +95,8 @@ void set_speed_pwm(int16_t speed_pwm)	//speed_pwm正为向前，负为向后
 	}
 	else if (speed_pwm<0)	//backward
 	{
+		StopL = 1;
+		RunL = 0;
 		speed_pwm = 0-speed_pwm;
 		if (speed_pwm>SPEED_PWM_MAX)
 		{
@@ -104,6 +108,8 @@ void set_speed_pwm(int16_t speed_pwm)	//speed_pwm正为向前，负为向后
 	}
 	else
 	{
+		StopL = 1;
+		RunL = 0;
 		EMIOS_0.CH[21].CBDR.R = 1;
 		EMIOS_0.CH[22].CBDR.R = 1;	
 	}
@@ -264,6 +270,19 @@ void set_steer_helm_basement(WORD helmData)
 	else if(helmData >= 5000)
 	{
 		helmData = 5000;
+	}
+	if(helmData <=3700)
+	{
+		LeftL = 1;
+	}
+	else if(helmData >=3800)
+	{
+		RightL = 1;
+	}
+	else
+	{
+		LeftL = 0;
+		RightL = 0;
 	}
 	EMIOS_0.CH[9].CBDR.R = helmData;
 }

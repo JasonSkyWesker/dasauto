@@ -208,8 +208,8 @@ void initEMIOS_0Image(void)
 void init_choose_mode(void)
 {
 	//mode=3;
-	mode=2;//尝试
-	//mode=switch1*2+switch4;
+	//mode=2;//尝试
+	mode=switch1*2+switch4;
 }
 
 /*-----------------------------------------------------------------------*/

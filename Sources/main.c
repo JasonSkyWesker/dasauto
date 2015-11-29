@@ -20,7 +20,6 @@ void main(void)
 void Mode0_DebugCamera(void)
 {
 	set_speed_target(20);
-	
 	EMIOS_0.CH[3].CCR.B.FEN=1;//开场中断
 	
 	LCD_write_english_string(96,0,"T");

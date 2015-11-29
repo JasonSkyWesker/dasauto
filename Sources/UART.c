@@ -1,6 +1,15 @@
 ﻿#define __UART_C_
 #include "includes.h"
 
+extern BYTE haha;
+extern BYTE rev_ch;
+extern WORD helm_use;
+extern int16_t motor_use;
+extern int direction;
+
+int lenth=0;
+
+BYTE status;
 
 int g_serial_port_0_f = 0;
 BYTE g_serial_port_0_data;
@@ -8,7 +17,7 @@ BYTE g_serial_port_0_data;
 int g_serial_port_1_f = 0;
 BYTE g_serial_port_1_data;
 
-
+void rev_remote_frame_44(BYTE rev);
 /*-----------------------------------------------------------------------*/
 /* 串口0初始化                                                           */
 /* 分配给WiFi模块使用                                                    */
@@ -74,7 +83,7 @@ void intc_serial_port_0_RX(void)
 	g_serial_port_0_f = 1;
 	g_serial_port_0_data = rev_ch;
 	LINFLEX_0.UARTSR.B.DRF=1;      //清空标志位
-	rev_remote_frame_2(rev_ch);
+	//rev_remote_frame_2(rev_ch);
 }
 
 
@@ -90,8 +99,8 @@ void init_serial_port_1(void)
 //	LINFLEX_1.LINIBRR.B.DIV_M= 520; //57600:86&13  9600:520&13
 //    LINFLEX_1.LINFBRR.B.DIV_F =13;
 //#else
-	LINFLEX_1.LINIBRR.B.DIV_M= 17; //57600
-    LINFLEX_1.LINFBRR.B.DIV_F = 6;
+	LINFLEX_1.LINIBRR.B.DIV_M= 26; //38400
+    LINFLEX_1.LINFBRR.B.DIV_F = 1;
 //#endif
 
     LINFLEX_1.UARTCR.B.UART=1;
@@ -136,7 +145,87 @@ void intc_serial_port_1_RX()
 	g_serial_port_1_f = 1;
 	g_serial_port_1_data = rev_ch;
 	LINFLEX_1.UARTSR.B.DRF=1;
+	rev_remote_frame_44(rev_ch);
 }
+
+void rev_remote_frame_44(BYTE rev)
+{
+    static int shuzi ;
+    static WORD high=0;
+    static WORD low=0;
+	shuzi=shuzi+1;
+	
+	if (shuzi==1)
+	 {
+		 if (rev=='Z')
+		{
+								 //serial_port_1_TX('a');
+		}	
+		 else 
+	   {	
+		   shuzi = 0;
+	   }
+	} 	
+	 else if (shuzi==2)
+     {
+		if (rev=='Z')
+		{
+			// serial_port_1_TX('a');
+		}
+		else 
+		{	
+			shuzi = 0;
+			 
+		} 
+	 }
+			    				
+	  else if (shuzi==3)
+	{
+		direction=rev;
+		//serial_port_1_TX('a');
+					
+	}
+	 else if (shuzi==4)
+	{
+			lenth=rev;
+					// serial_port_1_TX('a');
+	}
+	  else if (shuzi==5)
+	{
+			high=((WORD)(rev)<<8);
+			// serial_port_1_TX('a');
+					
+	}
+	 else if (shuzi==6)
+	{
+		low=(WORD)(rev);
+			if(direction==1)
+			{
+				helm_use=(high|low);
+			}
+			 else if (direction==5)
+			{
+				motor_use=(int16_t)(high|low);
+			}
+			 else
+			 {
+				 shuzi = 0;
+			 }
+					
+	
+		// serial_port_1_TX('c');
+		//set_steer_helm_basement(use);
+				
+	}
+	 else if (shuzi==7)
+	{
+		shuzi=0;
+		haha=1;
+	}
+
+        
+}
+
 
 
 /*-----------------------------------------------------------------------*/

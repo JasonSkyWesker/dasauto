@@ -1,4 +1,9 @@
 ﻿#include "includes.h"
+BYTE rev_ch;
+WORD helm_use=0;
+int16_t motor_use=0;
+int direction;
+BYTE haha;
 
 void Mode0_DebugCamera(void);
 void Mode1_SendVideo(void);
@@ -6,6 +11,7 @@ void Mode2_GO(void);
 void Mode3_Andriod(void);
 
 void main(void)
+
 {
 	init_all_and_POST();
 	if(mode==0)
@@ -74,12 +80,22 @@ void Mode1_SendVideo(void)
 
 void Mode2_GO(void)
 {
-	set_speed_target(20);
+	set_speed_pwm(400);
 	EMIOS_0.CH[3].CCR.B.FEN=1;//开场中断
 	
 	for (;;)
 	{
-
+		trigger_supersonic_0();
+		get_supersonic_time_0();
+		while((ABS((WORD)(tmp_time.R))/100)<200)
+		{
+			trigger_supersonic_0();
+			get_supersonic_time_0();
+			LCD_Write_Num(96,6,(ABS((WORD)(tmp_time.R))/100),5);
+			set_speed_pwm(0);
+		}	
+		LCD_Fill(0x00);
+		set_speed_pwm(400);
 		/* 执行远程命令 */
 		if (REMOTE_FRAME_STATE_OK == g_remote_frame_state)
 		{
@@ -113,23 +129,39 @@ void Mode2_GO(void)
 }
 void Mode3_Andriod(void)
 {
-	for (;;)
-	{
-		/* 执行远程命令 */
-		if (REMOTE_FRAME_STATE_OK == g_remote_frame_state)
-		{
-			g_remote_frame_state = REMOTE_FRAME_STATE_NOK;
+	 LCD_Fill(0x00);
+	for(;;)
+    {
+		   // LCD_PrintoutInt(48, 0, (int)haha);
+		  // LCD_PrintoutInt(48, 0, (int)shuzi);
+		   // LCD_PrintoutInt(48, 0, (int)rev_ch);
+		    LCD_PrintoutInt(48, 0, (int)motor_use);
+		  
+		// ---------------------交给控制--------------------	
+		   if(haha==1)
+	        {
+			   if (direction==1)
 			
-			execute_remote_cmd(remote_frame_data+5);
-		}
-
-		/* 整车动作控制 */
-//		control_car_action();
-
-		/* 报告在线 */
-//		report_online();
-
-
+		    	{
+		    		set_steer_helm_basement(helm_use); //舵机调参
+		    	}
+		        else if (direction==5)
+		    	{
+		    		set_speed_pwm(motor_use);
+		    	}
+		     haha=0;
+	        } 
+		   trigger_supersonic_0();
+		   get_supersonic_time_0();
+		   while(((ABS((WORD)(tmp_time.R))/100)<200) && (motor_use>0))
+		   {
+		   		trigger_supersonic_0();
+		   		get_supersonic_time_0();
+		   		LCD_Write_Num(96,6,(ABS((WORD)(tmp_time.R))/100),5);
+		   		set_speed_pwm(0);
+		   	}	
+		   	LCD_Fill(0x00);
+		   	set_speed_pwm(motor_use);	
 	}
-
+	
 }

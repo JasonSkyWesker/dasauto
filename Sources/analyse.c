@@ -179,15 +179,7 @@ void FindBlackLine(void)
 	RoadStart=ROWS;
 	RoadEnd=0;
 	//cs// 
-	trigger_supersonic_0();
-	get_supersonic_time_0();
-	while((ABS((WORD)(tmp_time.R))/100)<200)
-	{
-		trigger_supersonic_0();
-		get_supersonic_time_0();
-		LCD_Write_Num(96,6,(ABS((WORD)(tmp_time.R))/100),5);
-	}	
-	LCD_Fill(0x00);
+	
 	//LCD_Write_Num(96,6,(ABS((WORD)(tmp_time.R))/100),5);//cs//
 	for(lr=0;lr<2;lr++) {           //找左右线（0：左线，1：右线）
 	   	Line_Init(lr);				//初始化左右线变量

@@ -274,10 +274,12 @@ void set_steer_helm_basement(WORD helmData)
 	if(helmData <=3700)
 	{
 		LeftL = 1;
+		RightL = 0;
 	}
 	else if(helmData >=3800)
 	{
 		RightL = 1;
+		LeftL = 0;
 	}
 	else
 	{

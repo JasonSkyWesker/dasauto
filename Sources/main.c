@@ -4,6 +4,7 @@ WORD helm_use=0;
 int16_t motor_use=0;
 int direction;
 BYTE haha;
+int supersonic_on_off=1;
 
 void Mode0_DebugCamera(void);
 void Mode1_SendVideo(void);
@@ -135,7 +136,7 @@ void Mode3_Andriod(void)
 		   // LCD_PrintoutInt(48, 0, (int)haha);
 		  // LCD_PrintoutInt(48, 0, (int)shuzi);
 		   // LCD_PrintoutInt(48, 0, (int)rev_ch);
-		    LCD_PrintoutInt(48, 0, (int)motor_use);
+		    LCD_PrintoutInt(48, 0, (SWORD)motor_use);
 		  
 		// ---------------------交给控制--------------------	
 		   if(haha==1)
@@ -149,19 +150,26 @@ void Mode3_Andriod(void)
 		    	{
 		    		set_speed_pwm(motor_use);
 		    	}
+		        else if (direction==11)
+				{
+		        	supersonic_on_off=~supersonic_on_off;
+				}
 		     haha=0;
 	        } 
-		   trigger_supersonic_0();
-		   get_supersonic_time_0();
-		   while(((ABS((WORD)(tmp_time.R))/100)<200) && (motor_use>0))
+		   if (supersonic_on_off)
 		   {
-		   		trigger_supersonic_0();
-		   		get_supersonic_time_0();
-		   		LCD_Write_Num(96,6,(ABS((WORD)(tmp_time.R))/100),5);
-		   		set_speed_pwm(0);
-		   	}	
-		   	LCD_Fill(0x00);
-		   	set_speed_pwm(motor_use);	
+			   trigger_supersonic_0();
+			   get_supersonic_time_0();
+			   while(((ABS((WORD)(tmp_time.R))/100)<200) && (motor_use>0))
+			   {
+					trigger_supersonic_0();
+					get_supersonic_time_0();
+					LCD_Write_Num(96,6,(ABS((WORD)(tmp_time.R))/100),5);
+					set_speed_pwm(0);
+				}	
+				LCD_Fill(0x00);
+				set_speed_pwm(motor_use);
+		   }
 	}
 	
 }
